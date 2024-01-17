@@ -49,7 +49,7 @@ class BlogsController < ApplicationController
   end
 
   def ensure_correct_user
-    if @blog.user_id != current_user.id
+    if !@blog.owned_by?(current_user)
       raise ActiveRecord::RecordNotFound
     end
   end
