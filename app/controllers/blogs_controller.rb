@@ -11,7 +11,7 @@ class BlogsController < ApplicationController
   end
 
   def show
-    raise ActiveRecord::RecordNotFound if @blog.secret && !@blog.owned_by?(current_user)
+    @blog = Blog.where(user: current_user).or(Blog.published).find(params[:id])
   end
 
   def new
@@ -51,9 +51,7 @@ class BlogsController < ApplicationController
   end
 
   def ensure_correct_user
-    return if @blog.owned_by?(current_user)
-
-    raise ActiveRecord::RecordNotFound
+    current_user.blogs.find(params[:id])
   end
 
   def blog_params
